@@ -30,7 +30,7 @@ void setup()
   // Sets up temperature sensor(DS18B20)
   setupTempRead();
 
-  // Sets up user feedback(LEDs, Buzzer etc), more functions can be added in userFeedback.h
+  // Sets up user feedback(LEDs, Buzzer etc), more functions can be added in userFeedback.cpp
   setupUserFeedback();
 
   // debugFrequency(); // Uncomment to debug 555 timer frequency output
@@ -55,22 +55,22 @@ void loop()
     firstPrint = false; // skip moving cursor the first time
   }
 
-  // debugFrequency();
+  // debugFrequency(); // use to debug frequency output from 555 timer
+
   Serial.println("--------------------------------");
+
+  // Read temperature in degree Celsius from DS18B20 sensor
   tempC = getTempC();
-  Serial.print("Substrate Temperature: \033[32m");
+  Serial.print("Substrate Temperature: \033[32m"); // print in green
   Serial.print(tempC);
   Serial.println("\033[0m °C\t\t\t");
+
   Serial.println("--------------------------------");
 
-  // condmicroS = getConductanceRTP(tempC);
-  // Serial.print("Conductance at 25°C: ");
-  // Serial.print(condmicroS);
-  // Serial.println(" μS");
-  getCond();
+  getCond(); // Read and print conductance,resistance and frequency  values
   Serial.println("--------------------------------");
 
-  delay(5000);
+  delay(5000); // wait before taking another reading
 
   /*
     if (condmicroS < 60)
