@@ -14,8 +14,7 @@ float resistance = 0;
 int delayTime = 10;
 
 const double c = 2.1e6;
-const double m = -1.0/0.907;
-
+const double m = -1.0 / 0.907;
 
 float dist = 0.3;
 float dia = 0.08;
@@ -38,26 +37,32 @@ void debugFrequency()
         Serial.println(cellConstant);
     }
 }
-void getCond(){
+void getCond()
+{
     if (FreqCount.available())
     {
         freq = FreqCount.read();
-        Serial.println(freq);
+        Serial.print("Frequency: ");
+        Serial.print(freq);
+        Serial.println(" Hz");
+        Serial.println("--------------------------------");
+
         // Serial.println(cellConstant);
     }
-    float res = pow(freq/c, m);
-    Serial.print("Resistance: ");
-    Serial.println(res,1);
-    conductance = 1e6*cellConstant /res; // in microS
-    Serial.print("Conductance: ");
-    Serial.print(conductance,1);
-    Serial.println(" uS ");
-    Serial.print("RTP Adjusted Conductance: ");
+    float res = pow(freq / c, m);
+    Serial.print("Resistance:\033[32m ");
+    Serial.print(res, 1);
+    Serial.println("\033[0m             ");
+    Serial.println("--------------------------------");
+    conductance = 1e6 * cellConstant / res; // in microS
+    Serial.print("Conductance: \033[32m");
+    Serial.print(conductance, 1);
+    Serial.println("\033[0m µS     ");
+    Serial.println("--------------------------------");
+    Serial.print("RTP Adjusted Conductance:\033[32m ");
     conductanceRTP = conductance / (1 + temperatureCoef * (tempRTP - 25));
-    Serial.print(conductanceRTP,1);
-    Serial.print(" uS At 25C");
-    Serial.println("---------------");
-    delay(5000);
+    Serial.print(conductanceRTP, 1);
+    Serial.println("\033[0m µS @ 25C       ");
 }
 
 float getConductanceRTP(float tempDeg)
@@ -65,20 +70,20 @@ float getConductanceRTP(float tempDeg)
     sum = 0;
     for (int i = 0; i < samples_cond; i++)
     {
-         if (FreqCount.available())
-    {
-        freq = FreqCount.read();
-        // Serial.println(freq);
-        // Serial.println(cellConstant);
-    }
+        if (FreqCount.available())
+        {
+            freq = FreqCount.read();
+            // Serial.println(freq);
+            // Serial.println(cellConstant);
+        }
         sum += freq;
         delay(0);
     }
 
     average = sum / samples_cond;
-    float res = pow(average/c, m);
-    conductance = 1e6*cellConstant /res; // in microS
-    
+    float res = pow(average / c, m);
+    conductance = 1e6 * cellConstant / res; // in microS
+
     conductanceRTP = conductance / (1 + temperatureCoef * (tempDeg - 25));
     return conductanceRTP;
 }
@@ -91,7 +96,7 @@ void serialPlotFreq()
 void serialPrintConductance()
 {
     Serial.print("Conductance: ");
-    Serial.print(conductance,1);
+    Serial.print(conductance, 1);
     Serial.println(" uS ");
 }
 
